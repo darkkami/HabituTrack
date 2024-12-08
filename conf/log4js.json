@@ -1,0 +1,20 @@
+{
+    "appenders": {
+        "console": {
+            "type": "console",
+            "layout": {
+                "type": "pattern",
+                "pattern": "%[[%d{dd/MM/yyyy hh:mm:ss.SSS}] [%p] [%f{1}:%l]%] %m"
+            }
+        }
+    },
+    "categories": {
+        "default": {
+            "appenders": [
+                "console"
+            ],
+            "level": "debug",
+            "enableCallStack": true
+        }
+    }
+}
