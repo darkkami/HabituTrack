@@ -13,9 +13,11 @@ class UserController {
         const username: string = req.body.username;
         const logger = log4js.getLogger();
 
+        logger.info("Inicio da criacao de usuario [" + username + "]")
         logger.debug(req.body);
 
         if (!username) {
+            logger.error("Username nao informado");
             res.status(StatusCodes.BAD_REQUEST).json(
                 new ReturnMessages('error',
                     StatusCodes.BAD_REQUEST,
@@ -26,6 +28,7 @@ class UserController {
 
         userRepository.count({ where: { username } }).then(async (userExists: number) => {
             if (userExists > 0) {
+                logger.error("Usuario [" + username + "] ja existe");
                 res.status(StatusCodes.CONFLICT).json(
                     new ReturnMessages('error',
                         StatusCodes.CONFLICT,

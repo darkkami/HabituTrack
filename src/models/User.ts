@@ -20,6 +20,24 @@ export class User {
     @Column({ type: 'text', nullable: false })
     private password?: string;
 
+    @Column({ type: 'text', nullable: false })
+    public name: string;
+
+    @Column({ type: 'text', nullable: false })
+    public surname: string;
+
+    @Column({ type: 'datetime', nullable: false })
+    public birthdate: Date;
+
+    @Column({ type: 'text', nullable: false })
+    public genre: string;
+
+    @Column({ type: 'text', nullable: false })
+    public email: string;
+
+    @Column({ type: 'text', nullable: false })
+    public phoneNumber: string;
+
     @Column({ type: 'integer', nullable: false, default: Constants.MAX_LOGIN_ATTEMPTS })
     public remainingLoginAttempts: number;
 
@@ -28,9 +46,6 @@ export class User {
 
     @Column({ type: 'datetime', default: null })
     public lastLogin: Date;
-
-    @Column({ type: 'boolean', default: false, nullable: false })
-    public isAdmin: boolean;
 
     @CreateDateColumn()
     private createdDate: Date;
@@ -47,20 +62,24 @@ export class User {
     public token: string;
 
     constructor(req: Request) {
+        const logger = log4js.getLogger();
+
         if (!req) {
             return;
         }
 
         this.username = req.body.username;
+        this.name = req.body.name;
+        this.surname = req.body.surname;
+        this.birthdate = new Date(req.body.birthdate);
+        this.genre = req.body.genre;
+        this.email = req.body.email;
+        this.phoneNumber = req.body.phoneNumber;
 
         if (req.body.password) {
             this.setPassword(req.body.password, false);
         } else {
             this.generateNewPassword();
-        }
-
-        if (req.body.isAdmin != undefined) {
-            this.isAdmin = req.body.isAdmin;
         }
     }
 
@@ -91,6 +110,9 @@ export class User {
 
     private sendPasswdEmail(passwd: string): void {
         const logger = log4js.getLogger();
+
+        logger.debug("Enviando e-mail com a senha para [" + this.email + "]")
+
         let subject: string = '[HabituTrack] Recupere seu acesso';
         let message: string = '<b>Olá,</b><div><br></div><div>' +
             'Seguem as informações para recuperar seu acesso ao HabituTrack.</div><div><br></div><div>' +
@@ -101,8 +123,8 @@ export class User {
             'A senha gerada expira em <font color="#ff0000"><b>' + Constants.HOURS_EXPIRE_TMP_PASSWD + ' horas</b></font>, caso não seja alterada.</div>';
 
         let mailOptions = {
-            from: "contato@habitutrack.com.br",
-            to: this.username,
+            from: process.env.MAIL_USER,
+            to: this.email,
             subject: subject,
             html: message
         };
@@ -110,7 +132,7 @@ export class User {
         const smtpConfig: SMTPTransport.Options = {
             host: process.env.MAIL_HOST,
             port: Number(process.env.MAIL_PORT),
-            secure: false,
+            secure: true,
             auth: {
                 user: process.env.MAIL_USER,
                 pass: process.env.MAIL_PASSWD
@@ -123,6 +145,7 @@ export class User {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
+                logger.error("Erro ao enviar e-mail com a senha")
                 logger.error(error);
                 return error;
             } else {
