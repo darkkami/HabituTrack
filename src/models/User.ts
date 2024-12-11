@@ -31,10 +31,7 @@ export class User {
 
     @Column({ type: 'text', nullable: false })
     public genre: string;
-
-    @Column({ type: 'text', nullable: false })
-    public email: string;
-
+    
     @Column({ type: 'text', nullable: false })
     public phoneNumber: string;
 
@@ -73,7 +70,6 @@ export class User {
         this.surname = req.body.surname;
         this.birthdate = new Date(req.body.birthdate);
         this.genre = req.body.genre;
-        this.email = req.body.email;
         this.phoneNumber = req.body.phoneNumber;
 
         if (req.body.password) {
@@ -111,7 +107,7 @@ export class User {
     private sendPasswdEmail(passwd: string): void {
         const logger = log4js.getLogger();
 
-        logger.debug("Enviando e-mail com a senha para [" + this.email + "]")
+        logger.debug("Enviando e-mail com a senha para [" + this.username + "]")
 
         let subject: string = '[HabituTrack] Recupere seu acesso';
         let message: string = '<b>Olá,</b><div><br></div><div>' +
@@ -124,7 +120,7 @@ export class User {
 
         let mailOptions = {
             from: process.env.MAIL_USER,
-            to: this.email,
+            to: this.username,
             subject: subject,
             html: message
         };
@@ -132,7 +128,7 @@ export class User {
         const smtpConfig: SMTPTransport.Options = {
             host: process.env.MAIL_HOST,
             port: Number(process.env.MAIL_PORT),
-            secure: true,
+            secure: false,
             auth: {
                 user: process.env.MAIL_USER,
                 pass: process.env.MAIL_PASSWD
