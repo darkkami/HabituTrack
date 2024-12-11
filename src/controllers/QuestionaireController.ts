@@ -19,7 +19,7 @@ class QuestionaireController {
 
         if (!username) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages('error',
+                new ReturnMessages(
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));

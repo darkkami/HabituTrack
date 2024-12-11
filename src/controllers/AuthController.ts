@@ -20,8 +20,9 @@ class AuthController {
 
         repository.findOne({ where: { username } }).then((user: User | null) => {
             if (!user) {
+                logger.warn("Usuario nao encontrado");
                 res.status(StatusCodes.UNAUTHORIZED).json(
-                    new ReturnMessages('error',
+                    new ReturnMessages(
                         StatusCodes.UNAUTHORIZED,
                         ErrorMessages.INVALID_USER_PASSWD,
                         "")
@@ -38,8 +39,9 @@ class AuthController {
 
             if (user.remainingLoginAttempts == 0 &&
                 user.lastLoginAttempt.getTime() >= yesterday.getTime()) {
+                logger.warn(ErrorMessages.BLOCKED_USER);
                 res.status(StatusCodes.FORBIDDEN).json(
-                    new ReturnMessages('error',
+                    new ReturnMessages(
                         StatusCodes.FORBIDDEN,
                         ErrorMessages.BLOCKED_USER,
                         'Data do bloqueio: ' + user.lastLoginAttempt.toLocaleString('pt-BR'))
@@ -56,13 +58,15 @@ class AuthController {
                     repository.save(user);
 
                     if (user.remainingLoginAttempts == 0) {
+                        logger.warn("Senha incorreta e usuario bloqueado");
                         res.status(StatusCodes.FORBIDDEN).json(
-                            new ReturnMessages('error',
+                            new ReturnMessages(
                                 StatusCodes.FORBIDDEN,
                                 ErrorMessages.BLOCKED_USER,
                                 'Data do bloqueio: ' + user.lastLoginAttempt.toLocaleString('pt-BR')));
                     } else {
-                        let msg: ReturnMessages = new ReturnMessages('error',
+                        logger.warn("Senha incorreta");
+                        let msg: ReturnMessages = new ReturnMessages(
                             StatusCodes.UNAUTHORIZED,
                             ErrorMessages.INVALID_USER_PASSWD,
                             'Tentativas de login restantes: ' + user.remainingLoginAttempts);
@@ -83,8 +87,9 @@ class AuthController {
                 }
 
                 if (passwdDateExpiration.getTime() <= new Date().getTime()) {
+                    logger.warn("Senha expirada");
                     res.status(StatusCodes.FORBIDDEN).json(
-                        new ReturnMessages('error',
+                        new ReturnMessages(
                             StatusCodes.FORBIDDEN,
                             ErrorMessages.EXPIRED_PASSWORD,
                             'Data da expiração: ' + passwdDateExpiration.toLocaleString('pt-BR'))
@@ -106,12 +111,14 @@ class AuthController {
 
                 user.token = jsonwebtoken.sign({ id: user.id }, process.env.API_SECRET, { expiresIn: "1d" });
 
+                logger.info("Usuario autenticado com sucesso");
+
                 res.json({ user });
             });
         }).catch((error: Error) => {
             logger.error(error);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                new ReturnMessages('error',
+                new ReturnMessages(
                     StatusCodes.INTERNAL_SERVER_ERROR,
                     error.message,
                     error.stack)

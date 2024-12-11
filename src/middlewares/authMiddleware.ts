@@ -13,16 +13,11 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
 
     AppDataSource.getRepository(User).count().then((qtdUsers: number) => {
         if (!authorization) {
-            if (qtdUsers == 0 && req.route.path == '/user') {
-                logger.warn('Nenhum usuario encontrado na base. Permitindo a criacao de usuario sem estar autenticado');
-                next();
-            } else {
-                res.status(StatusCodes.UNAUTHORIZED).send(
-                    new ReturnMessages('error',
-                        StatusCodes.UNAUTHORIZED,
-                        ErrorMessages.NO_TOKEN_PROVIDED,
-                        null));
-            }
+            res.status(StatusCodes.UNAUTHORIZED).send(
+                new ReturnMessages(
+                    StatusCodes.UNAUTHORIZED,
+                    ErrorMessages.NO_TOKEN_PROVIDED,
+                    null));
         } else {
             const token: string = authorization.replace('Bearer', '').trim();
 
@@ -34,7 +29,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
                 if (err) {
                     logger.error(err);
                     res.status(StatusCodes.UNAUTHORIZED).send(
-                        new ReturnMessages('error',
+                        new ReturnMessages(
                             StatusCodes.UNAUTHORIZED,
                             err.message,
                             err.stack));
@@ -48,7 +43,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
     }).catch((error: Error) => {
         logger.error(error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-            new ReturnMessages('error',
+            new ReturnMessages(
                 StatusCodes.INTERNAL_SERVER_ERROR,
                 error.message,
                 error.stack));

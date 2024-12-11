@@ -132,6 +132,8 @@ class UserController {
         const id: number = req.userId;
         const newPasswd: string = req.body.newPassword;
 
+        logger.info("Alterando senha do usuario [" + id + "]");
+
         if (!newPasswd) {
             res.status(StatusCodes.BAD_REQUEST).json(
                 new ReturnMessages(
@@ -147,7 +149,7 @@ class UserController {
 
             repository.save(user);
 
-            logger.info('Senho do usuario [' + user.username + '] alterada');
+            logger.info('Senha do usuario [' + id + '] alterada');
 
             res.status(StatusCodes.NO_CONTENT).send();
         }).catch((error) => {
