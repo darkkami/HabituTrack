@@ -1,11 +1,12 @@
 import { Request } from 'express';
-import { Entity, PrimaryGeneratedColumn, Column, Index, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index, UpdateDateColumn, CreateDateColumn, OneToOne } from 'typeorm';
 import bcryptjs from 'bcryptjs';
 import { Constants } from '../util/Constants';
 import { generate } from 'generate-password';
 import log4js from 'log4js';
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 import * as nodemailer from "nodemailer";
+import { Questionaire } from './Questionaire';
 
 @Entity('users')
 export class User {
@@ -31,7 +32,7 @@ export class User {
 
     @Column({ type: 'text', nullable: false })
     public genre: string;
-    
+
     @Column({ type: 'text', nullable: false })
     public phoneNumber: string;
 
@@ -57,6 +58,9 @@ export class User {
     public passwordResetFlag: boolean;
 
     public token: string;
+
+    @OneToOne(() => Questionaire, (questionaire) => questionaire.user, { cascade: true })
+    questionaire: Questionaire;
 
     constructor(req: Request) {
         const logger = log4js.getLogger();
