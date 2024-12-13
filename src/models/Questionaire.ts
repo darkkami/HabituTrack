@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
 import { User } from './User';
 
 @Entity('questionaires')
@@ -34,7 +34,8 @@ export class Questionaire {
     @Column({ type: 'text', nullable: true })
     hobbies: string;
 
-    @OneToOne(() => User, (user) => user.questionaire)
+    @OneToOne(() => User)
+    @JoinColumn()
     user: User;
 
     @CreateDateColumn()
@@ -43,7 +44,7 @@ export class Questionaire {
     @UpdateDateColumn()
     private lastModifiedDate: Date;
 
-    constructor(req: Request) {
+    constructor(req: Request, user: User) {
         if (!req) {
             return;
         }
@@ -57,5 +58,6 @@ export class Questionaire {
         this.restricoesAlimentares = req.body.restricoesAlimentares;
         this.nivelEstresse = req.body.nivelEstresse;
         this.hobbies = req.body.hobbies;
+        this.user = user;
     }
 }
