@@ -21,7 +21,7 @@ class QuestionaireController {
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -37,7 +37,7 @@ class QuestionaireController {
                 .catch((error: QueryFailedError) => {
                     logger.error(error);
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.INTERNAL_SERVER_ERROR,
                             error.message,
                             error.stack));
@@ -45,7 +45,7 @@ class QuestionaireController {
         }).catch((error) => {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));

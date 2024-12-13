@@ -22,7 +22,7 @@ class AuthController {
             if (!user) {
                 logger.warn("Usuario nao encontrado");
                 res.status(StatusCodes.UNAUTHORIZED).json(
-                    new ReturnMessages(
+                    new ReturnMessages("error",
                         StatusCodes.UNAUTHORIZED,
                         ErrorMessages.INVALID_USER_PASSWD,
                         "")
@@ -41,7 +41,7 @@ class AuthController {
                 user.lastLoginAttempt.getTime() >= yesterday.getTime()) {
                 logger.warn(ErrorMessages.BLOCKED_USER);
                 res.status(StatusCodes.FORBIDDEN).json(
-                    new ReturnMessages(
+                    new ReturnMessages("error",
                         StatusCodes.FORBIDDEN,
                         ErrorMessages.BLOCKED_USER,
                         'Data do bloqueio: ' + user.lastLoginAttempt.toLocaleString('pt-BR'))
@@ -60,13 +60,13 @@ class AuthController {
                     if (user.remainingLoginAttempts == 0) {
                         logger.warn("Senha incorreta e usuario bloqueado");
                         res.status(StatusCodes.FORBIDDEN).json(
-                            new ReturnMessages(
+                            new ReturnMessages("error",
                                 StatusCodes.FORBIDDEN,
                                 ErrorMessages.BLOCKED_USER,
                                 'Data do bloqueio: ' + user.lastLoginAttempt.toLocaleString('pt-BR')));
                     } else {
                         logger.warn("Senha incorreta");
-                        let msg: ReturnMessages = new ReturnMessages(
+                        let msg: ReturnMessages = new ReturnMessages("error",
                             StatusCodes.UNAUTHORIZED,
                             ErrorMessages.INVALID_USER_PASSWD,
                             'Tentativas de login restantes: ' + user.remainingLoginAttempts);
@@ -89,7 +89,7 @@ class AuthController {
                 if (passwdDateExpiration.getTime() <= new Date().getTime()) {
                     logger.warn("Senha expirada");
                     res.status(StatusCodes.FORBIDDEN).json(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.FORBIDDEN,
                             ErrorMessages.EXPIRED_PASSWORD,
                             'Data da expiração: ' + passwdDateExpiration.toLocaleString('pt-BR'))
@@ -118,7 +118,7 @@ class AuthController {
         }).catch((error: Error) => {
             logger.error(error);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.INTERNAL_SERVER_ERROR,
                     error.message,
                     error.stack)

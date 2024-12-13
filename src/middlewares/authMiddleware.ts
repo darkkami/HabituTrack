@@ -14,7 +14,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
     AppDataSource.getRepository(User).count().then((qtdUsers: number) => {
         if (!authorization) {
             res.status(StatusCodes.UNAUTHORIZED).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.UNAUTHORIZED,
                     ErrorMessages.NO_TOKEN_PROVIDED,
                     null));
@@ -29,7 +29,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
                 if (err) {
                     logger.error(err);
                     res.status(StatusCodes.UNAUTHORIZED).send(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.UNAUTHORIZED,
                             err.message,
                             err.stack));
@@ -43,7 +43,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
     }).catch((error: Error) => {
         logger.error(error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-            new ReturnMessages(
+            new ReturnMessages("error",
                 StatusCodes.INTERNAL_SERVER_ERROR,
                 error.message,
                 error.stack));
