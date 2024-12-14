@@ -20,11 +20,11 @@ class PlanningController {
         });
         const logger = log4js.getLogger();
 
-        const userId: number = req.params.userId;
+        const userId: number = parseInt(req.params.userId);
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -76,7 +76,7 @@ class PlanningController {
                         .catch((error: QueryFailedError) => {
                             logger.error(error);
                             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                                new ReturnMessages(
+                                new ReturnMessages("error",
                                     StatusCodes.INTERNAL_SERVER_ERROR,
                                     error.message,
                                     error.stack));
@@ -85,7 +85,7 @@ class PlanningController {
                 .catch((error: QueryFailedError) => {
                     logger.error(error);
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.INTERNAL_SERVER_ERROR,
                             error.message,
                             error.stack));
@@ -93,7 +93,7 @@ class PlanningController {
         }).catch((error: Error) => {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));
@@ -108,11 +108,11 @@ class PlanningController {
         });
         const logger = log4js.getLogger();
 
-        const userId: number = req.params.userId;
+        const userId: number = parseInt(req.params.userId);
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -164,7 +164,7 @@ class PlanningController {
                         .catch((error: QueryFailedError) => {
                             logger.error(error);
                             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                                new ReturnMessages(
+                                new ReturnMessages("error",
                                     StatusCodes.INTERNAL_SERVER_ERROR,
                                     error.message,
                                     error.stack));
@@ -173,7 +173,7 @@ class PlanningController {
                 .catch((error: QueryFailedError) => {
                     logger.error(error);
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.INTERNAL_SERVER_ERROR,
                             error.message,
                             error.stack));
@@ -181,7 +181,7 @@ class PlanningController {
         }).catch((error: Error) => {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));
@@ -192,11 +192,11 @@ class PlanningController {
         const planningRepository: Repository<Planning> = AppDataSource.getRepository(Planning);
         const logger = log4js.getLogger();
 
-        const planId: number = req.params.planId;
+        const planId: number = parseInt(req.params.planId);
 
         if (!planId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -220,7 +220,7 @@ class PlanningController {
         }).catch((error: QueryFailedError) => {
             logger.error(error);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.INTERNAL_SERVER_ERROR,
                     error.message,
                     error.stack));
@@ -231,11 +231,11 @@ class PlanningController {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const logger = log4js.getLogger();
 
-        const userId: number = req.params.userId;
+        const userId: number = parseInt(req.params.userId);
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -264,7 +264,7 @@ class PlanningController {
                 .catch((error: QueryFailedError) => {
                     logger.error(error);
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.INTERNAL_SERVER_ERROR,
                             error.message,
                             error.stack));
@@ -273,7 +273,7 @@ class PlanningController {
         .catch((error: QueryFailedError) => {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));
@@ -290,7 +290,7 @@ class PlanningController {
 
         if (!habitId || !userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -317,7 +317,7 @@ class PlanningController {
                 .catch((error: QueryFailedError) => {
                     logger.error(error);
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.INTERNAL_SERVER_ERROR,
                             error.message,
                             error.stack));
@@ -325,7 +325,7 @@ class PlanningController {
         }).catch((error: QueryFailedError) => {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));
@@ -336,11 +336,11 @@ class PlanningController {
         const habitRepository: Repository<UserHabits> = AppDataSource.getRepository(UserHabits);
         const logger = log4js.getLogger();
 
-        const habitId: number = req.params.habitId;
+        const habitId: number = parseInt(req.params.habitId);
 
         if (!habitId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -360,7 +360,7 @@ class PlanningController {
         }).catch((error: QueryFailedError) => {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));
