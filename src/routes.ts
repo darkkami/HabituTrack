@@ -15,11 +15,11 @@ router.post('/user', UserController.create);
 router.post('/personal-info', authMiddleware, QuestionaireController.savePersonalInfo);
 router.put('/personal-info', authMiddleware, QuestionaireController.updatePersonalInfo);
 
-router.post('/user/:userId/plan', authMiddleware, PlanningController.createPlan);
-router.put('/user/:userId/plan', authMiddleware, PlanningController.updatePlan);
+router.post('/plan', authMiddleware, PlanningController.createPlan);
+router.put('/plan', authMiddleware, PlanningController.updatePlan);
 router.get('/plan/:planId', authMiddleware, PlanningController.getPlan);
-router.post('/user/:userId/habit', authMiddleware, PlanningController.createHabit);
-router.put('/user/:userId/habit', authMiddleware, PlanningController.updateHabit);
+router.post('/habit', authMiddleware, PlanningController.createHabit);
+router.put('/habit', authMiddleware, PlanningController.updateHabit);
 router.get('/habit/:habitId', authMiddleware, PlanningController.getHabit);
 
 export default router;

@@ -20,7 +20,7 @@ class PlanningController {
         });
         const logger = log4js.getLogger();
 
-        const userId: number = parseInt(req.params.userId);
+        const userId: number = req.userId;
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
@@ -108,7 +108,7 @@ class PlanningController {
         });
         const logger = log4js.getLogger();
 
-        const userId: number = parseInt(req.params.userId);
+        const userId: number = req.userId;
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
@@ -231,7 +231,7 @@ class PlanningController {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const logger = log4js.getLogger();
 
-        const userId: number = parseInt(req.params.userId);
+        const userId: number = req.userId;
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(

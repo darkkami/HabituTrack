@@ -13,7 +13,7 @@ class QuestionaireController {
     public async savePersonalInfo(req: Request, res: Response): Promise<void> {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const questionaireRepository: Repository<Questionaire> = AppDataSource.getRepository(Questionaire);
-        const userId: number = req.body.userId;
+        const userId: number = req.userId;
         const logger = log4js.getLogger();
 
         if (!userId) {
@@ -63,12 +63,12 @@ class QuestionaireController {
     public async updatePersonalInfo(req: Request, res: Response): Promise<void> {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const questionaireRepository: Repository<Questionaire> = AppDataSource.getRepository(Questionaire);
-        const userId: number = req.body.userId;
+        const userId: number = req.userId;
         const logger = log4js.getLogger();
 
         if (!userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -94,7 +94,7 @@ class QuestionaireController {
             .catch((error: QueryFailedError) => {
                 logger.error(error);
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                    new ReturnMessages(
+                    new ReturnMessages("error",
                         StatusCodes.INTERNAL_SERVER_ERROR,
                         error.message,
                         error.stack));
@@ -102,7 +102,7 @@ class QuestionaireController {
         }).catch((error: Error) => {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));
