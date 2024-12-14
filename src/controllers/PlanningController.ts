@@ -18,12 +18,12 @@ class PlanningController {
         const logger = log4js.getLogger();
 
         if (!process.env.OPENAI_API_KEY) {
-            logger.error("OpenAI API Key nao configurada");
+            logger.error(ErrorMessages.OPENAI_API_KEY_NOT_FOUND);
 
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
                 new ReturnMessages("error",
                     StatusCodes.INTERNAL_SERVER_ERROR,
-                    ErrorMessages.MISSING_MADATORY_FIELD,
+                    ErrorMessages.OPENAI_API_KEY_NOT_FOUND,
                     null));
             return;
         }
@@ -33,16 +33,7 @@ class PlanningController {
         });
 
         const userId: number = req.userId;
-
-        if (!userId) {
-            res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages("error",
-                    StatusCodes.BAD_REQUEST,
-                    ErrorMessages.MISSING_MADATORY_FIELD,
-                    null));
-            return;
-        }
-
+        
         userRepository.findOneOrFail({ where: { id: userId } }).then((user: User) => {
 
             questionaireRepository.findOneOrFail({ where: { user: { id: user.id } }, relations: ["user"] }).then(async (questionaire: Questionaire) => {
