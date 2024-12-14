@@ -15,15 +15,6 @@ class QuestionaireController {
         const userId: number = req.userId;
         const logger = log4js.getLogger();
 
-        if (!userId) {
-            res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages("error",
-                    StatusCodes.BAD_REQUEST,
-                    ErrorMessages.MISSING_MADATORY_FIELD,
-                    null));
-            return;
-        }
-
         userRepository.findOneOrFail({ where: { id: userId } }).then((user: User) => {
             const questionaire: Questionaire = new Questionaire(req, user);
             questionaireRepository.upsert(questionaire, ["id"]).then(() => {
