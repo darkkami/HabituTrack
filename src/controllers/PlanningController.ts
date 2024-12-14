@@ -15,10 +15,22 @@ class PlanningController {
     public createPlan (req: Request, res: Response): void {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const questionaireRepository: Repository<Questionaire> = AppDataSource.getRepository(Questionaire);
+        const logger = log4js.getLogger();
+        
+        if(!process.env.OPENAI_API_KEY) {
+            logger.error("OpenAI API Key nao configurada");
+
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
+                new ReturnMessages("error",
+                    StatusCodes.INTERNAL_SERVER_ERROR,
+                    ErrorMessages.MISSING_MADATORY_FIELD,
+                    null));
+            return;
+        }
+        
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
         });
-        const logger = log4js.getLogger();
 
         const userId: number = req.userId;
 
