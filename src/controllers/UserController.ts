@@ -19,7 +19,7 @@ class UserController {
         if (!username) {
             logger.error("Username nao informado");
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -30,7 +30,7 @@ class UserController {
             if (userExists > 0) {
                 logger.error("Usuario [" + username + "] ja existe");
                 res.status(StatusCodes.CONFLICT).json(
-                    new ReturnMessages(
+                    new ReturnMessages("error",
                         StatusCodes.CONFLICT,
                         ErrorMessages.USER_ALREADY_EXISTS,
                         null));
@@ -47,7 +47,7 @@ class UserController {
                 .catch((error: Error) => {
                     logger.error(error);
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
-                        new ReturnMessages(
+                        new ReturnMessages("error",
                             StatusCodes.INTERNAL_SERVER_ERROR,
                             error.message,
                             error.stack));
@@ -55,7 +55,7 @@ class UserController {
         }).catch((error: Error) => {
             console.error(error);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.INTERNAL_SERVER_ERROR,
                     error.message,
                     error.stack));
@@ -87,7 +87,7 @@ class UserController {
             }).catch((error: Error) => {
                 logger.error(error);
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                    new ReturnMessages(
+                    new ReturnMessages("error",
                         StatusCodes.INTERNAL_SERVER_ERROR,
                         error.message,
                         error.stack));
@@ -104,7 +104,7 @@ class UserController {
 
         if (req.userId == id) {
             res.status(StatusCodes.BAD_REQUEST).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.USER_CANNOT_SELF_DELETE,
                     null));
@@ -119,7 +119,7 @@ class UserController {
             .catch((error: QueryFailedError) => {
                 logger.error(error);
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                    new ReturnMessages(
+                    new ReturnMessages("error",
                         StatusCodes.INTERNAL_SERVER_ERROR,
                         error.message,
                         error.stack));
@@ -136,7 +136,7 @@ class UserController {
 
         if (!newPasswd) {
             res.status(StatusCodes.BAD_REQUEST).json(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.BAD_REQUEST,
                     ErrorMessages.MISSING_MADATORY_FIELD,
                     null));
@@ -155,7 +155,7 @@ class UserController {
         }).catch((error) => {
             logger.error(error);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                new ReturnMessages(
+                new ReturnMessages("error",
                     StatusCodes.INTERNAL_SERVER_ERROR,
                     error.message,
                     error.stack));
@@ -177,7 +177,7 @@ class UserController {
             logger.info('Senha do usuario [' + user.username + '] resetada');
 
             res.status(StatusCodes.OK).send(
-                new ReturnMessages(
+                new ReturnMessages("success",
                     StatusCodes.OK,
                     ErrorMessages.RESET_PASSWD + user.username,
                     null));
@@ -186,14 +186,15 @@ class UserController {
                 logger.warn('Usuario [' + username + '] nao encontrado');
                 // Caso nao encontre o usuario, retorna sucesso para nao indicar usuarios invalidos
                 res.status(StatusCodes.OK).send(
-                    new ReturnMessages(
+                    new ReturnMessages("success",
                         StatusCodes.OK,
                         ErrorMessages.RESET_PASSWD + username,
                         null));
             } else {
                 logger.error(error);
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                    new ReturnMessages(StatusCodes.INTERNAL_SERVER_ERROR,
+                    new ReturnMessages("error",
+                        StatusCodes.INTERNAL_SERVER_ERROR,
                         error.message,
                         error.stack));
             }
