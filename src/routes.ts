@@ -13,8 +13,13 @@ router.post('/change-passwd', authMiddleware, UserController.changePasswd);
 router.post('/user', UserController.create);
 
 router.post('/save-personal-info', authMiddleware, QuestionaireController.savePersonalInfo);
+router.put('/update-personal-info', authMiddleware, QuestionaireController.updatePersonalInfo);
 
-router.post('/create-plan', authMiddleware, PlanningController.createPlan);
-router.get('/get-plan', authMiddleware, PlanningController.getPlan);
+router.post('/create-plan/:userId', authMiddleware, PlanningController.createPlan);
+router.put('/update-plan/:userId', authMiddleware, PlanningController.updatePlan);
+router.get('/get-plan/:planId', authMiddleware, PlanningController.getPlan);
+router.post('/create-habit/:userId', authMiddleware, PlanningController.createHabit);
+router.put('/update-habit/:userId', authMiddleware, PlanningController.updateHabit);
+router.get('/get-habit/:habitId', authMiddleware, PlanningController.getHabit);
 
 export default router;

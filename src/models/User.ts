@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Entity, PrimaryGeneratedColumn, Column, Index, UpdateDateColumn, CreateDateColumn, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index, UpdateDateColumn, CreateDateColumn, OneToOne, OneToMany } from 'typeorm';
 import bcryptjs from 'bcryptjs';
 import { Constants } from '../util/Constants';
 import { generate } from 'generate-password';
@@ -7,6 +7,7 @@ import log4js from 'log4js';
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 import * as nodemailer from "nodemailer";
 import { Questionaire } from './Questionaire';
+import { UserHabits } from './UserHabits';
 
 @Entity('users')
 export class User {
@@ -61,6 +62,9 @@ export class User {
 
     @OneToOne(() => Questionaire, (questionaire) => questionaire.user, { cascade: true })
     questionaire: Questionaire;
+
+    @OneToMany(() => UserHabits, (habit) => habit.user, { cascade: true })
+    habits: UserHabits[]
 
     constructor(req: Request) {
         const logger = log4js.getLogger();

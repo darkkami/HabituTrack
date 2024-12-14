@@ -37,7 +37,7 @@ class QuestionaireController {
                             },
                             {
                                 "rel": "create_plan",
-                                "href": "/create-plan/" + questionaire.id
+                                "href": "/create-plan/" + questionaire.user.id
                             }
                         ]
                     });
@@ -54,6 +54,55 @@ class QuestionaireController {
             logger.error(error);
             res.status(StatusCodes.NOT_FOUND).send(
                 new ReturnMessages("error",
+                    StatusCodes.NOT_FOUND,
+                    error.message,
+                    error.stack));
+        });
+    }
+
+    public async updatePersonalInfo(req: Request, res: Response): Promise<void> {
+        const userRepository: Repository<User> = AppDataSource.getRepository(User);
+        const questionaireRepository: Repository<Questionaire> = AppDataSource.getRepository(Questionaire);
+        const userId: number = req.body.userId;
+        const logger = log4js.getLogger();
+
+        if (!userId) {
+            res.status(StatusCodes.BAD_REQUEST).json(
+                new ReturnMessages(
+                    StatusCodes.BAD_REQUEST,
+                    ErrorMessages.MISSING_MADATORY_FIELD,
+                    null));
+            return;
+        }
+
+        userRepository.findOneOrFail({ where: { id: userId } }).then((user: User) => {
+            const questionaire: Questionaire = new Questionaire(req, user);
+            questionaireRepository.save(questionaire).then(() => {
+                res.json({
+                    "_links": [
+                        {
+                            "rel": "self",
+                            "href": "/questionaire/" + questionaire.id
+                        },
+                        {
+                            "rel": "update_plan",
+                            "href": "/update-plan/" + questionaire.user.id
+                        }
+                    ]
+                });
+            })
+            .catch((error: QueryFailedError) => {
+                logger.error(error);
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
+                    new ReturnMessages(
+                        StatusCodes.INTERNAL_SERVER_ERROR,
+                        error.message,
+                        error.stack));
+            });
+        }).catch((error: Error) => {
+            logger.error(error);
+            res.status(StatusCodes.NOT_FOUND).send(
+                new ReturnMessages(
                     StatusCodes.NOT_FOUND,
                     error.message,
                     error.stack));
