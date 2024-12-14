@@ -12,12 +12,12 @@ import log4js from 'log4js';
 import { OpenAI } from "openai";
 
 class PlanningController {
-    public createPlan (req: Request, res: Response): void {
+    public createPlan(req: Request, res: Response): void {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const questionaireRepository: Repository<Questionaire> = AppDataSource.getRepository(Questionaire);
         const logger = log4js.getLogger();
-        
-        if(!process.env.OPENAI_API_KEY) {
+
+        if (!process.env.OPENAI_API_KEY) {
             logger.error("OpenAI API Key nao configurada");
 
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -27,7 +27,7 @@ class PlanningController {
                     null));
             return;
         }
-        
+
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
         });
@@ -45,51 +45,51 @@ class PlanningController {
 
         userRepository.findOneOrFail({ where: { id: userId } }).then((user: User) => {
 
-            questionaireRepository.findOneOrFail({ where: { user: {id: user.id}}, relations: ["user"] }).then(async (questionaire: Questionaire) => {
-                    let objetivo = questionaire.objetivo;
-                    let motivacao = questionaire.motivacao;
-                    let cronotipo = questionaire.cronotipo;
-                    let rotinaAlimentar = questionaire.rotinaAlimentar;
-                    let frequenciaExercicio = questionaire.frequenciaExercicio;
-                    let obstaculos = questionaire.obstaculos;
-                    let restricoesAlimentares = questionaire.restricoesAlimentares;
-                    let nivelEstresse = questionaire.nivelEstresse;
-                    let hobbies = questionaire.hobbies;
+            questionaireRepository.findOneOrFail({ where: { user: { id: user.id } }, relations: ["user"] }).then(async (questionaire: Questionaire) => {
+                let objetivo = questionaire.objetivo;
+                let motivacao = questionaire.motivacao;
+                let cronotipo = questionaire.cronotipo;
+                let rotinaAlimentar = questionaire.rotinaAlimentar;
+                let frequenciaExercicio = questionaire.frequenciaExercicio;
+                let obstaculos = questionaire.obstaculos;
+                let restricoesAlimentares = questionaire.restricoesAlimentares;
+                let nivelEstresse = questionaire.nivelEstresse;
+                let hobbies = questionaire.hobbies;
 
-                    let message = `Crie uma nova estratégia de exercícios físicos para mim. Considere as seguintes informações:\n
+                let message = `Crie uma nova estratégia de exercícios físicos para mim. Considere as seguintes informações:\n
                     Objetivo: ${objetivo}\nMotivação: ${motivacao}\nCronotipo: ${cronotipo}\n
                     Rotina Alimentar: ${rotinaAlimentar}\nFrequência de Exercício: ${frequenciaExercicio}\n
                     Obstáculos: ${obstaculos}\nRestrições Alimentares: ${restricoesAlimentares}\nNível de Estresse: ${nivelEstresse}\nHobbies: ${hobbies}`;
 
-                    const completion = await openai.chat.completions.create({
-                        model: "gpt-4o",
-                        messages: [{ role: "user", content: message }],
-                    });
+                const completion = await openai.chat.completions.create({
+                    model: "gpt-4o",
+                    messages: [{ role: "user", content: message }],
+                });
 
-                    const planningRepository: Repository<Planning> = AppDataSource.getRepository(Planning);
-                    const planContent = completion.choices[0].message.content || "Não foi possível gerar um plano de exercícios físicos. Por favor, tente novamente mais tarde.";
-                    const planning: Planning = new Planning(planContent, user);
+                const planningRepository: Repository<Planning> = AppDataSource.getRepository(Planning);
+                const planContent = completion.choices[0].message.content || "Não foi possível gerar um plano de exercícios físicos. Por favor, tente novamente mais tarde.";
+                const planning: Planning = new Planning(planContent, user);
 
-                    planningRepository.save(planning)
-                        .then(() => {
-                            res.json({
-                                "_links": [
-                                    {
-                                        "rel": "self",
-                                        "href": "/plan/" + planning.id
-                                    }
-                                ]
-                            });
-                        })
-                        .catch((error: QueryFailedError) => {
-                            logger.error(error);
-                            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
-                                new ReturnMessages("error",
-                                    StatusCodes.INTERNAL_SERVER_ERROR,
-                                    error.message,
-                                    error.stack));
+                planningRepository.save(planning)
+                    .then(() => {
+                        res.json({
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "href": "/plan/" + planning.id
+                                }
+                            ]
                         });
-                })
+                    })
+                    .catch((error: QueryFailedError) => {
+                        logger.error(error);
+                        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
+                            new ReturnMessages("error",
+                                StatusCodes.INTERNAL_SERVER_ERROR,
+                                error.message,
+                                error.stack));
+                    });
+            })
                 .catch((error: QueryFailedError) => {
                     logger.error(error);
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
@@ -108,7 +108,7 @@ class PlanningController {
         });
     }
 
-    public getPlan (req: Request, res: Response): void {
+    public getPlan(req: Request, res: Response): void {
         const planningRepository: Repository<Planning> = AppDataSource.getRepository(Planning);
         const logger = log4js.getLogger();
 
@@ -147,7 +147,7 @@ class PlanningController {
         });
     }
 
-    public createHabit (req: Request, res: Response): void {
+    public createHabit(req: Request, res: Response): void {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const logger = log4js.getLogger();
 
@@ -190,17 +190,17 @@ class PlanningController {
                             error.stack));
                 });
         })
-        .catch((error: QueryFailedError) => {
-            logger.error(error);
-            res.status(StatusCodes.NOT_FOUND).send(
-                new ReturnMessages("error",
-                    StatusCodes.NOT_FOUND,
-                    error.message,
-                    error.stack));
-        });
+            .catch((error: QueryFailedError) => {
+                logger.error(error);
+                res.status(StatusCodes.NOT_FOUND).send(
+                    new ReturnMessages("error",
+                        StatusCodes.NOT_FOUND,
+                        error.message,
+                        error.stack));
+            });
     }
 
-    public updateHabit (req: Request, res: Response): void {
+    public updateHabit(req: Request, res: Response): void {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const habitRepository: Repository<UserHabits> = AppDataSource.getRepository(UserHabits);
         const logger = log4js.getLogger();
@@ -219,17 +219,13 @@ class PlanningController {
 
         userRepository.findOneOrFail({ where: { id: userId } }).then((user: User) => {
             const habit: UserHabits = new UserHabits(req, user);
-            habitRepository.save(habit)
+            habitRepository.update(habitId, habit)
                 .then(() => {
                     res.json({
                         "_links": [
                             {
                                 "rel": "self",
-                                "href": "/habit/" + habit.id
-                            },
-                            {
-                                "rel": "update_habit",
-                                "href": "/habit/" + habit.id
+                                "href": "/habit/" + habitId
                             }
                         ]
                     });
@@ -252,7 +248,7 @@ class PlanningController {
         });
     }
 
-    public getHabit (req: Request, res: Response): void {
+    public getHabit(req: Request, res: Response): void {
         const habitRepository: Repository<UserHabits> = AppDataSource.getRepository(UserHabits);
         const logger = log4js.getLogger();
 
