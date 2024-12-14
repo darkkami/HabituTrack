@@ -37,7 +37,7 @@ class QuestionaireController {
                             },
                             {
                                 "rel": "create_plan",
-                                "href": "/create-plan/" + questionaire.user.id
+                                "href": "/plan"
                             }
                         ]
                     });
@@ -85,8 +85,8 @@ class QuestionaireController {
                             "href": "/questionaire/" + questionaire.id
                         },
                         {
-                            "rel": "update_plan",
-                            "href": "/update-plan/" + questionaire.user.id
+                            "rel": "create_plan",
+                            "href": "/plan"
                         }
                     ]
                 });

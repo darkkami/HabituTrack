@@ -12,7 +12,7 @@ import log4js from 'log4js';
 import { OpenAI } from "openai";
 
 class PlanningController {
-    public upsertPlan (req: Request, res: Response): void {
+    public createPlan (req: Request, res: Response): void {
         const userRepository: Repository<User> = AppDataSource.getRepository(User);
         const questionaireRepository: Repository<Questionaire> = AppDataSource.getRepository(Questionaire);
         const openai = new OpenAI({
@@ -64,11 +64,7 @@ class PlanningController {
                                 "_links": [
                                     {
                                         "rel": "self",
-                                        "href": "/get-plan/" + planning.id
-                                    },
-                                    {
-                                        "rel": "update_plan",
-                                        "href": "/update-plan/" + planning.user.id
+                                        "href": "/plan/" + planning.id
                                     }
                                 ]
                             });
@@ -120,11 +116,11 @@ class PlanningController {
                 "_links": [
                     {
                         "rel": "self",
-                        "href": "/get-plan/" + planning.id
+                        "href": "/plan/" + planning.id
                     },
                     {
-                        "rel": "update_plan",
-                        "href": "/update-plan/" + planning.user.id
+                        "rel": "create_plan",
+                        "href": "/plan"
                     }
                 ],
                 "plan": planning.plan
@@ -164,11 +160,11 @@ class PlanningController {
                         "_links": [
                             {
                                 "rel": "self",
-                                "href": "/get-habit/" + habit.id
+                                "href": "/habit/" + habit.id
                             },
                             {
                                 "rel": "update_habit",
-                                "href": "/update-habit/" + habit.user.id
+                                "href": "/habit/" + habit.id
                             }
                         ]
                     });
@@ -217,11 +213,11 @@ class PlanningController {
                         "_links": [
                             {
                                 "rel": "self",
-                                "href": "/get-habit/" + habit.id
+                                "href": "/habit/" + habit.id
                             },
                             {
                                 "rel": "update_habit",
-                                "href": "/update-habit/" + habit.user.id
+                                "href": "/habit/" + habit.id
                             }
                         ]
                     });
@@ -264,7 +260,7 @@ class PlanningController {
                 "_links": [
                     {
                         "rel": "update_habit",
-                        "href": "/update-habit/" + habit.user.id
+                        "href": "/habit/" + habit.id
                     }
                 ],
                 "habit": habit

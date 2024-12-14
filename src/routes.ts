@@ -15,7 +15,7 @@ router.post('/user', UserController.create);
 router.post('/personal-info', authMiddleware, QuestionaireController.savePersonalInfo);
 router.put('/personal-info', authMiddleware, QuestionaireController.updatePersonalInfo);
 
-router.put('/plan', authMiddleware, PlanningController.upsertPlan);
+router.post('/plan', authMiddleware, PlanningController.createPlan);
 router.get('/plan/:planId', authMiddleware, PlanningController.getPlan);
 router.post('/habit', authMiddleware, PlanningController.createHabit);
 router.put('/habit/:habitId', authMiddleware, PlanningController.updateHabit);
