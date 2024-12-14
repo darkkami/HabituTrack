@@ -12,7 +12,6 @@ router.post('/reset-passwd', UserController.resetPassword);
 router.post('/change-passwd', authMiddleware, UserController.changePasswd);
 router.post('/user', UserController.create);
 
-router.post('/personal-info', authMiddleware, QuestionaireController.savePersonalInfo);
 router.put('/personal-info', authMiddleware, QuestionaireController.updatePersonalInfo);
 
 router.post('/plan', authMiddleware, PlanningController.createPlan);
