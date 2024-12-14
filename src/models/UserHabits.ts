@@ -15,7 +15,7 @@ export class UserHabits {
 
     @ManyToOne(() => User, (user) => user.habits)
     @JoinColumn()
-    user: User;
+    user?: User;
 
     @CreateDateColumn()
     private createdDate: Date;
@@ -31,5 +31,9 @@ export class UserHabits {
         this.habit = req.body.habit;
         this.time = req.body.time || 0;
         this.user = user;
+    }
+
+    public deleteUser(): void {
+        delete this.user;
     }
 }

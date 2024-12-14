@@ -264,6 +264,7 @@ class PlanningController {
         }
 
         habitRepository.findOneOrFail({ where: { id: habitId }, relations: ["user"] }).then((habit: UserHabits) => {
+            habit.deleteUser();
             res.json({
                 "_links": [
                     {
