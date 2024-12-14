@@ -1,10 +1,10 @@
 import { Request } from 'express';
-import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, UpdateDateColumn, CreateDateColumn, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { User } from './User';
 
 @Entity('questionaires')
 export class Questionaire {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn({ type: 'integer', nullable: false })
     public id: number;
 
     @Column({ type: 'text', nullable: false })
@@ -49,6 +49,7 @@ export class Questionaire {
             return;
         }
 
+        this.id = user.id;
         this.objetivo = req.body.objetivo;
         this.motivacao = req.body.motivacao;
         this.cronotipo = req.body.cronotipo;

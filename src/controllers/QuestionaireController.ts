@@ -26,12 +26,12 @@ class QuestionaireController {
 
         userRepository.findOneOrFail({ where: { id: userId } }).then((user: User) => {
             const questionaire: Questionaire = new Questionaire(req, user);
-            questionaireRepository.save(questionaire).then(() => {
+            questionaireRepository.upsert(questionaire, ["id"]).then(() => {
                 res.json({
                     "_links": [
                         {
                             "rel": "self",
-                            "href": "/questionaire/" + questionaire.id
+                            "href": "/questionaire/" + questionaire.user.id
                         },
                         {
                             "rel": "create_plan",
