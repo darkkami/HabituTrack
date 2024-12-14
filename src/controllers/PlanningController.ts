@@ -285,8 +285,8 @@ class PlanningController {
         const habitRepository: Repository<UserHabits> = AppDataSource.getRepository(UserHabits);
         const logger = log4js.getLogger();
 
-        const habitId: number = req.body.id;
-        const userId: number = req.body.userId;
+        const habitId: number = parseInt(req.params.habitId);
+        const userId: number = req.userId;
 
         if (!habitId || !userId) {
             res.status(StatusCodes.BAD_REQUEST).json(
